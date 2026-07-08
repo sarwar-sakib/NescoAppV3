@@ -91,7 +91,7 @@
         }
         .chart-container {
             margin-top: 12px;
-            height: 150px;  /* taller graph */
+            height: 150px;
             position: relative;
         }
         .chart-container canvas {
@@ -135,6 +135,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0/dist/chartjs-plugin-datalabels.min.js"></script>
 
     <script>
+        // Register the datalabels plugin globally
+        Chart.plugins.register(ChartDataLabels);
+
         const HISTORY_URL = "meter_history.json";
         const CONFIG_URL = "meter_config.json";
         const CACHE_BUST = '?v=' + new Date().getTime();
@@ -145,7 +148,6 @@
             if (!dateStr) return '';
             const parts = dateStr.split('-');
             if (parts.length !== 3) return dateStr;
-            const year = parts[0];
             const month = parseInt(parts[1], 10) - 1;
             const day = parseInt(parts[2], 10);
             const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -242,12 +244,6 @@
                     // Draw mini chart
                     const ctx = document.getElementById(`chart-${meter}`).getContext('2d');
 
-                    // Chart.js DataLabels plugin configuration
-                    const datalabelsPlugin = Chart.plugins.get('datalabels');
-                    if (datalabelsPlugin) {
-                        // Ensure it's registered
-                    }
-
                     const chart = new Chart(ctx, {
                         type: 'bar',
                         data: {
@@ -305,8 +301,7 @@
                                     offset: 2
                                 }
                             }
-                        },
-                        plugins: [ChartDataLabels]  // Ensure plugin is used
+                        }
                     });
 
                     allCharts.push(chart);
